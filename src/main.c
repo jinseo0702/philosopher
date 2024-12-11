@@ -2,14 +2,11 @@
 
 int main(int argc, char **argv)
 {
+    if (argc != 5 && argc != 6)
+        printf("The number of arguments is different.\n");
     if (check_argv(argv) == -1)
         return (0);
-    if (argc == 5)
-        ft_start(argc, argv);
-    else if (argc == 6)
-        ft_start(argc, argv);
-    else
-        printf("The number of arguments is different.\n");
+    ft_start(argc, argv);
     return (0);
 }
 

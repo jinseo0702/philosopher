@@ -7,7 +7,7 @@ int init_arg(t_arg *arg,  int argc, char **argv)
     arg->ttd = ft_atoi(argv[2]);
     arg->tte = ft_atoi(argv[3]);
     arg->tts = ft_atoi(argv[4]);
-    memset(&arg->start, 0, sizeof(struct timeval));
+    arg->start = check_time();
     if (init_fork(arg) == -1)
         return (-1);
     if (argc == 6)

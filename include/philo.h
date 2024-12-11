@@ -16,7 +16,7 @@ typedef struct s_arg
     long long tts;
     long long mse;
     int argc;
-    struct timeval start;
+    long long start;
     pthread_mutex_t *fork;
 } t_arg;
 
@@ -28,13 +28,12 @@ typedef struct s_philo
     long long eat;
     int die;
     long long time;
-    struct timeval end;
     pthread_mutex_t *left;
     pthread_mutex_t *right;
 } t_philo;
 
 void msg_lock_fork(t_philo *philo, pthread_mutex_t *mutex, t_arg *arg);
-long long check_time(t_arg *arg, t_philo *philo);
+long long check_time(void);
 int mutex_init(pthread_mutex_t *mutex);
 int destroy_mutex(pthread_mutex_t *mutex);
 int init_arg(t_arg *arg,  int argc, char **argv);
