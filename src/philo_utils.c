@@ -4,7 +4,7 @@ int check_argv(char **argv)
 {
     int idx;
     int flag;
-
+  
     idx = 0;
     flag = 0;
     while (argv[++idx])
