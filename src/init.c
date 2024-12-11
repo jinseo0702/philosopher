@@ -9,6 +9,8 @@ int init_arg(t_arg *arg,  int argc, char **argv)
     arg->tts = ft_atoi(argv[4]);
     if (init_fork(arg) == -1)
         return (-1);
+    if (mutex_init(&arg->eat) == -1)
+        return (-1);
     if (argc == 6)
         arg->mse = ft_atoi(argv[5]);
     else
@@ -16,31 +18,52 @@ int init_arg(t_arg *arg,  int argc, char **argv)
     return (1);
 }
 
+int mutex_init(pthread_mutex_t *mutex)
+{
+    if(pthread_mutex_init(mutex, NULL) != 0)
+        return (-1);//error처리하기
+    return (1);
+}
+
 int init_thread(t_philo *philo, t_arg *arg)
 {
     int cnt;
+    int siz;
 
     cnt = 0;
-    philo = malloc(sizeof(t_philo) * arg->argc);
+    philo = malloc(sizeof(t_philo) * (arg->num + 1));
     if (!philo)
         return (-1);
-    memset(philo, 0, philo);
-    while (cnt < arg->argc)
+    siz = sizeof(philo) * (arg->num + 1);
+    memset(philo, 0, siz);
+    while (cnt < arg->num)
     {
+        philo[cnt].arg = arg;
+        philo[cnt].id = (cnt + 1);
+        philo[cnt].eat = 0;
+        philo[cnt].die = 0;
+        philo[cnt].right = &arg->fork[cnt];
+        if (cnt == arg->num - 1)
+            philo[cnt].left = &arg->fork[0];
+        else
+            philo[cnt].left = &arg->fork[cnt + 1];
         cnt++;
     }
+    return (1);
 }
 
 int init_fork(t_arg *arg)
 {
     int cnt;
+    int siz;
 
     cnt = 0;
-    arg->fork = malloc(sizeof(pthread_mutex_t) * arg->argc);
+    arg->fork = malloc(sizeof(pthread_mutex_t) * (arg->num + 1));
     if (!arg->fork)
         return (-1);
-    memset(arg->fork, 0, arg->argc);
-    while (cnt < arg->argc)
+    siz = sizeof(pthread_mutex_t) * (arg->num + 1);
+    memset(arg->fork, 0, siz);
+    while (cnt < arg->num)
     {
         if(pthread_mutex_init(&arg->fork[cnt], NULL) != 0)
             return (-1);//error처리하기

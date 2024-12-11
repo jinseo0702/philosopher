@@ -10,6 +10,7 @@ int main(int argc, char **argv)
         if (check_argv(argv) == -1)
             return (0);
          init_arg(&arg,  argc, argv);
+         init_thread(&philo, &arg);
         printf("Hello Wrold\n");
     }
     else
