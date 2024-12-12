@@ -1,16 +1,26 @@
 #include "../include/philo.h"
 
-void msg_lock_fork(t_philo *philo, pthread_mutex_t *mutex, t_arg *arg)
+void msg(t_philo *philo, t_arg *arg, const char *str)
 {
-    pthread_mutex_t print;
+    long long time;
 
-    pthread_mutex_init(&print, NULL);
-    pthread_mutex_lock(mutex);
-    pthread_mutex_lock(&print);
-    philo->time = check_time();
-    printf("%lld %d has taken a fork\n", philo->time - arg->start, philo->id);
-    pthread_mutex_unlock(&print);
-    pthread_mutex_destroy(&print);
+    pthread_mutex_lock(&arg->print);
+    if (arg->cnt > 0)
+    {
+        pthread_mutex_unlock(&arg->print);
+        return ;
+    }
+    time = check_time();
+    if (time - arg->start - philo->btime > arg->ttd)
+    {
+        printf("%lld %d died\n", time - arg->start, philo->id);
+        arg->cnt++;
+        pthread_mutex_unlock(&arg->print);
+        return ;
+    }
+    printf("%lld %d %s\n", time - arg->start, philo->id, str);
+    philo->btime = time - arg->start;
+    pthread_mutex_unlock(&arg->print);
 }
 
 long long check_time(void)//마이크로 단위로 변환
@@ -19,4 +29,20 @@ long long check_time(void)//마이크로 단위로 변환
 
     gettimeofday(&time, NULL);
     return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+}
+
+void ft_usleep(long long how)
+{
+    long long now; 
+
+    now = check_time();
+    while (check_time() - now < how)
+    {
+        usleep(how /10);
+    }
+}
+
+void ft_even(t_arg *arg)
+{
+    ft_usleep(arg->tte /2);
 }

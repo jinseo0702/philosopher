@@ -17,7 +17,10 @@ typedef struct s_arg
     long long mse;
     int argc;
     long long start;
+    int cnt;
     pthread_mutex_t *fork;
+    pthread_mutex_t print;
+    pthread_mutex_t eat;
 } t_arg;
 
 typedef struct s_philo
@@ -26,29 +29,27 @@ typedef struct s_philo
     pthread_t philo;
     int id;
     long long eat;
+    long long btime;
     int die;
-    long long time;
     pthread_mutex_t *left;
     pthread_mutex_t *right;
 } t_philo;
 
-void msg_lock_fork(t_philo *philo, pthread_mutex_t *mutex, t_arg *arg);
+void msg(t_philo *philo, t_arg *arg, const char *str);
 long long check_time(void);
-int mutex_init(pthread_mutex_t *mutex);
+void ft_usleep(long long how);
 int destroy_mutex(pthread_mutex_t *mutex);
 int init_arg(t_arg *arg,  int argc, char **argv);
 t_philo *init_thread(t_arg *arg);
 int init_fork(t_arg *arg);
-int destroy_fork(t_arg *arg);
+int destroy_fork_philo(t_arg *arg, t_philo *philo);
 int check_argv(char **argv);
 long long	ft_atoi(const char *nptr);
 int	ft_isdigit(int c);
-void do_thread(void *philo);
+void *do_thread(void *philo);
 void do_routin(t_philo *philo);
-void take_fork(t_philo *philo, t_arg *arg);
-void do_eat(t_philo *philo, t_arg *arg);
-void do_sleep(t_philo *philo, t_arg *arg);
-void do_think(t_philo *philo, t_arg *arg);
 void ft_start(int argc, char **argv);
+void *ft_moniter(void *philo);
+void ft_even(t_arg *arg);
 
 # endif
