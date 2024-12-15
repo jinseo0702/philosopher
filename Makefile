@@ -14,7 +14,7 @@ NAME = philo
 all : $(NAME)
 
 $(NAME): $(OBJS)
-#@$(CC) $(CFLAG) $(OBJS) -o $(NAME) -fsanitize=thread
+# @$(CC) $(CFLAG) $(OBJS) -o $(NAME) -fsanitize=thread
 	@$(CC) $(CFLAG) $(OBJS) -o $(NAME)
 
 clean :

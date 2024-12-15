@@ -18,9 +18,11 @@ typedef struct s_arg
     int argc;
     long long start;
     int cnt;
+    int fc;
     pthread_mutex_t *fork;
     pthread_mutex_t print;
     pthread_mutex_t eat;
+    pthread_mutex_t fin;
 } t_arg;
 
 typedef struct s_philo
@@ -31,8 +33,12 @@ typedef struct s_philo
     long long eat;
     long long btime;
     int die;
+    int fis;
+    int t_argc;
+    long long t_mse;
     pthread_mutex_t *left;
     pthread_mutex_t *right;
+    pthread_mutex_t t_fin;
 } t_philo;
 
 void msg(t_philo *philo, t_arg *arg, const char *str);
@@ -51,5 +57,7 @@ void do_routin(t_philo *philo);
 void ft_start(int argc, char **argv);
 void *ft_moniter(void *philo);
 void ft_even(t_arg *arg);
-
+int	ft_strncmp(const char *s1, const char *s2, size_t n);
+void check_died(t_philo *philo, t_arg *arg);
+int check_mse(t_philo *philo);
 # endif

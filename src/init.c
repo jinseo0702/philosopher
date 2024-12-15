@@ -3,6 +3,7 @@
 int init_arg(t_arg *arg,  int argc, char **argv)
 {
     arg->argc = argc;
+    arg->fc = 0;
     arg->cnt = 0;
     arg->num = ft_atoi(argv[1]);
     arg->ttd = ft_atoi(argv[2]);
@@ -25,10 +26,10 @@ t_philo *init_thread(t_arg *arg)
     int siz;
 
     cnt = 0;
-    philo = malloc(sizeof(t_philo) * (arg->num + 1));
+    philo = (t_philo *)malloc(sizeof(t_philo) * (arg->num));
     if (!philo)
         return (NULL);
-    siz = sizeof(t_philo) * (arg->num + 1);
+    siz = sizeof(t_philo) * (arg->num);
     memset(philo, 0, siz);
     while (cnt < arg->num)
     {
@@ -37,7 +38,11 @@ t_philo *init_thread(t_arg *arg)
         philo[cnt].eat = 0;
         philo[cnt].btime = 0;
         philo[cnt].die = 0;
+        philo[cnt].fis = 0;
+        philo[cnt].t_argc = arg->argc;
+        philo[cnt].t_mse = arg->mse;
         philo[cnt].right = &arg->fork[cnt];
+        pthread_mutex_init(&philo[cnt].t_fin, NULL);
         if (cnt == arg->num - 1)
             philo[cnt].left = &arg->fork[0];
         else
@@ -53,14 +58,15 @@ int init_fork(t_arg *arg)
     int siz;
 
     cnt = -1;
-    arg->fork = malloc(sizeof(pthread_mutex_t) * (arg->num + 1));
+    arg->fork = malloc(sizeof(pthread_mutex_t) * (arg->num));
     if (!arg->fork)
         return (-1);
-    siz = sizeof(pthread_mutex_t) * (arg->num + 1);
+    siz = sizeof(pthread_mutex_t) * (arg->num);
     memset(arg->fork, 0, siz);
     pthread_mutex_init(&arg->print, NULL);
     pthread_mutex_init(&arg->eat, NULL);
-    while (++cnt < arg->num)
+    pthread_mutex_init(&arg->fin, NULL);
+    while (++cnt <= arg->num)
         pthread_mutex_init(&arg->fork[cnt], NULL);
     return (1);
 }
@@ -70,11 +76,15 @@ int destroy_fork_philo(t_arg *arg, t_philo *philo)
     int cnt;
 
     cnt = -1;
-    while (++cnt <= arg->argc)
+    while (++cnt < arg->num)
+    {
         pthread_mutex_destroy(&arg->fork[cnt]);
+        pthread_mutex_destroy(&philo[cnt].t_fin);
+    }
     free(arg->fork);
     pthread_mutex_destroy(&arg->print);
     pthread_mutex_destroy(&arg->eat);
+    pthread_mutex_destroy(&arg->fin);
     free(philo);
     return (1);
 }

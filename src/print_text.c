@@ -11,15 +11,11 @@ void msg(t_philo *philo, t_arg *arg, const char *str)
         return ;
     }
     time = check_time();
-    if (time - arg->start - philo->btime > arg->ttd)
-    {
-        printf("%lld %d died\n", time - arg->start, philo->id);
-        arg->cnt++;
-        pthread_mutex_unlock(&arg->print);
-        return ;
-    }
     printf("%lld %d %s\n", time - arg->start, philo->id, str);
-    philo->btime = time - arg->start;
+    if (!ft_strncmp(str, "is eating", 9))
+    {
+        philo->btime = time - arg->start;
+    }
     pthread_mutex_unlock(&arg->print);
 }
 
