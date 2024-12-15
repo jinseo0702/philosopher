@@ -11,24 +11,32 @@ void *do_thread(void *philo)
 		ft_usleep(arg->tte /2);
     while (arg->cnt == 0)
     {
-        pthread_mutex_lock(temp->left);
-        msg(temp, arg, "has taken a fork");
         pthread_mutex_lock(temp->right);
+        msg(temp, arg, "has taken a fork");
+        if(arg->num > 1)
+        {
+        pthread_mutex_lock(temp->left);
         msg(temp, arg, "has taken a fork");
         msg(temp, arg, "is eating");
         temp->eat++;
         if (check_mse(temp))
         {
-            pthread_mutex_unlock(temp->right);
             pthread_mutex_unlock(temp->left);
+            pthread_mutex_unlock(temp->right);
             break;
         }
-        ft_usleep(arg->tte);
-        pthread_mutex_unlock(temp->right);
+        ft_usleep2(arg->tte, arg);
         pthread_mutex_unlock(temp->left);
+        pthread_mutex_unlock(temp->right);
         msg(temp, arg, "is sleeping");
-        ft_usleep(arg->tts);
+        ft_usleep2(arg->tts, arg);
         msg(temp, arg, "is thinking");
+        }
+        else
+        {
+            ft_usleep2(arg->ttd * 2, arg);
+            pthread_mutex_unlock(temp->right);
+        }
     }
     pthread_mutex_lock(&arg->fin);
     arg->fc++;
@@ -99,7 +107,6 @@ void check_died(t_philo *philo, t_arg *arg)
     int fis;
     long long last_eat;
 
-
     time = check_time();
     pthread_mutex_lock(&philo->t_fin);
     fis = philo->fis;
@@ -115,6 +122,7 @@ void check_died(t_philo *philo, t_arg *arg)
     {
         printf("%lld %d died\n", time - arg->start, philo->id);
         arg->cnt++;
+        arg->sleep++;
         pthread_mutex_unlock(&arg->print);
         return ;
     }

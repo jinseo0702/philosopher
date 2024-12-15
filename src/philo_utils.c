@@ -25,21 +25,21 @@ long long	ft_atoi(const char *nptr)
 	nb = 0;
     idx = -1;
     flag = 0;
-    if (nptr[0] == '0')
-            flag = 1;
     while (nptr[++idx])
+	{
         if (!ft_isdigit(nptr[idx]))
             flag = 1;
-    if (flag == 1)
-    {
-        printf("ERROR : The value you entered is incorrect\n");
-        return (-1);
-    }
+	}
 	while (*nptr >= '0' && *nptr <= '9')
 	{
 		nb = (*nptr - 48) + (nb * 10);
 		nptr++;
 	}
+	if (flag == 1 || (nb < 0 || nb > 2147483647))
+    {
+        printf("ERROR : The value you entered is incorrect\n");
+        return (-1);
+    }
 	return (nb);
 }
 

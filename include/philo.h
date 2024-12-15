@@ -17,6 +17,7 @@ typedef struct s_arg
     long long mse;
     int argc;
     long long start;
+    int sleep;
     int cnt;
     int fc;
     pthread_mutex_t *fork;
@@ -44,6 +45,7 @@ typedef struct s_philo
 void msg(t_philo *philo, t_arg *arg, const char *str);
 long long check_time(void);
 void ft_usleep(long long how);
+void ft_usleep2(long long how, t_arg *arg);
 int destroy_mutex(pthread_mutex_t *mutex);
 int init_arg(t_arg *arg,  int argc, char **argv);
 t_philo *init_thread(t_arg *arg);

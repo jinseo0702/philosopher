@@ -5,6 +5,7 @@ int init_arg(t_arg *arg,  int argc, char **argv)
     arg->argc = argc;
     arg->fc = 0;
     arg->cnt = 0;
+    arg->sleep = 0;
     arg->num = ft_atoi(argv[1]);
     arg->ttd = ft_atoi(argv[2]);
     arg->tte = ft_atoi(argv[3]);
@@ -66,7 +67,7 @@ int init_fork(t_arg *arg)
     pthread_mutex_init(&arg->print, NULL);
     pthread_mutex_init(&arg->eat, NULL);
     pthread_mutex_init(&arg->fin, NULL);
-    while (++cnt <= arg->num)
+    while (++cnt < arg->num)
         pthread_mutex_init(&arg->fork[cnt], NULL);
     return (1);
 }

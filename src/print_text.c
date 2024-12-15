@@ -38,6 +38,19 @@ void ft_usleep(long long how)
     }
 }
 
+void ft_usleep2(long long how, t_arg *arg)
+{
+    long long now; 
+
+    now = check_time();
+    while (check_time() - now < how)
+    {
+        if (arg->sleep > 0)
+            break ;
+        usleep(10);
+    }
+}
+
 void ft_even(t_arg *arg)
 {
     ft_usleep(arg->tte /2);

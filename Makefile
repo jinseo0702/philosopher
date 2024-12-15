@@ -10,18 +10,29 @@ src/routin.c \
 
 OBJS = $(SRC:.c=.o)
 NAME = philo
+TH = ph_th
+LE = leak
 
 all : $(NAME)
 
+debug_th : $(TH)
+
+debug_le : $(LE)
+
 $(NAME): $(OBJS)
-# @$(CC) $(CFLAG) $(OBJS) -o $(NAME) -fsanitize=thread
 	@$(CC) $(CFLAG) $(OBJS) -o $(NAME)
+
+$(TH): $(OBJS)
+	@$(CC) $(CFLAG) $(OBJS) -o $(TH) -fsanitize=thread
+
+$(LE): $(OBJS)
+	@$(CC) $(CFLAG) $(OBJS) -o $(LE) -fsanitize=address
 
 clean :
 	@$(RM) $(OBJS)
 
 fclean :
-	@$(RM) $(OBJS) $(NAME)
+	@$(RM) $(OBJS) $(NAME) $(TH) $(LE)
 
 re : 
 	@make fclean
